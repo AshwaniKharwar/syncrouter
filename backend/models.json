@@ -1,0 +1,222 @@
+{
+  "companies": [
+    {
+      "name": "OpenAI",
+      "website": "https://openai.com"
+    },
+    {
+      "name": "Google",
+      "website": "https://google.com"
+    },
+    {
+      "name": "Anthropic",
+      "website": "https://anthropic.com"
+    },
+    {
+      "name": "Kimi",
+      "website": "https://kimi.moonshot.cn"
+    },
+    {
+      "name": "DeepSeek",
+      "website": "https://deepseek.com"
+    }
+  ],
+  "providers": [
+    {
+      "name": "OpenAI",
+      "website": "https://platform.openai.com",
+      "models": [
+        {
+          "name": "GPT 5.5",
+          "slug": "gpt-5.5",
+          "company": "OpenAI",
+          "input_token_cost": 3.50,
+          "output_token_cost": 12.00
+        },
+        {
+          "name": "GPT 5.6 Sol",
+          "slug": "gpt-5.6-sol",
+          "company": "OpenAI",
+          "input_token_cost": 4.00,
+          "output_token_cost": 14.00
+        },
+        {
+          "name": "GPT 5.6 Terra",
+          "slug": "gpt-5.6-terra",
+          "company": "OpenAI",
+          "input_token_cost": 6.00,
+          "output_token_cost": 22.00
+        },
+        {
+          "name": "GPT 5.6 Luna",
+          "slug": "gpt-5.6-luna",
+          "company": "OpenAI",
+          "input_token_cost": 1.50,
+          "output_token_cost": 4.00
+        }
+      ]
+    },
+    {
+      "name": "Azure",
+      "website": "https://azure.microsoft.com",
+      "models": [
+        {
+          "name": "GPT 5.5",
+          "slug": "gpt-5.5",
+          "company": "OpenAI",
+          "input_token_cost": 3.60,
+          "output_token_cost": 12.40
+        },
+        {
+          "name": "GPT 5.6 Sol",
+          "slug": "gpt-5.6-sol",
+          "company": "OpenAI",
+          "input_token_cost": 4.10,
+          "output_token_cost": 14.50
+        },
+        {
+          "name": "GPT 5.6 Terra",
+          "slug": "gpt-5.6-terra",
+          "company": "OpenAI",
+          "input_token_cost": 6.20,
+          "output_token_cost": 22.50
+        },
+        {
+          "name": "GPT 5.6 Luna",
+          "slug": "gpt-5.6-luna",
+          "company": "OpenAI",
+          "input_token_cost": 1.60,
+          "output_token_cost": 4.20
+        },
+        {
+          "name": "Kimi k2.6",
+          "slug": "kimi-k2.6",
+          "company": "Kimi",
+          "input_token_cost": 1.70,
+          "output_token_cost": 4.60
+        }
+      ]
+    },
+    {
+      "name": "Google AI Studio",
+      "website": "https://aistudio.google.com",
+      "models": [
+        {
+          "name": "Gemini 3.6 Flash",
+          "slug": "gemini-3.6-flash",
+          "company": "Google",
+          "input_token_cost": 1.10,
+          "output_token_cost": 2.40
+        },
+        {
+          "name": "Gemini 3.7",
+          "slug": "gemini-3.7",
+          "company": "Google",
+          "input_token_cost": 2.25,
+          "output_token_cost": 7.00
+        },
+        {
+          "name": "Gemini 3.8",
+          "slug": "gemini-3.8",
+          "company": "Google",
+          "input_token_cost": 3.00,
+          "output_token_cost": 10.00
+        }
+      ]
+    },
+    {
+      "name": "Anthropic",
+      "website": "https://console.anthropic.com",
+      "models": [
+        {
+          "name": "Claude Haiku 4.5",
+          "slug": "claude-haiku-4.5",
+          "company": "Anthropic",
+          "input_token_cost": 1.80,
+          "output_token_cost": 6.00
+        },
+        {
+          "name": "Claude Sonnet 4.5",
+          "slug": "claude-sonnet-4.5",
+          "company": "Anthropic",
+          "input_token_cost": 4.00,
+          "output_token_cost": 17.00
+        },
+        {
+          "name": "Claude Sonnet 4.6",
+          "slug": "claude-sonnet-4.6",
+          "company": "Anthropic",
+          "input_token_cost": 4.50,
+          "output_token_cost": 18.00
+        },
+        {
+          "name": "Claude 5",
+          "slug": "claude-5",
+          "company": "Anthropic",
+          "input_token_cost": 6.00,
+          "output_token_cost": 27.00
+        }
+      ]
+    },
+    {
+      "name": "Vertex",
+      "website": "https://cloud.google.com/vertex-ai",
+      "models": [
+        {
+          "name": "Claude Haiku 4.5",
+          "slug": "claude-haiku-4.5",
+          "company": "Anthropic",
+          "input_token_cost": 1.85,
+          "output_token_cost": 6.20
+        },
+        {
+          "name": "Claude Sonnet 4.5",
+          "slug": "claude-sonnet-4.5",
+          "company": "Anthropic",
+          "input_token_cost": 4.10,
+          "output_token_cost": 17.50
+        },
+        {
+          "name": "Claude Sonnet 4.6",
+          "slug": "claude-sonnet-4.6",
+          "company": "Anthropic",
+          "input_token_cost": 4.60,
+          "output_token_cost": 18.50
+        },
+        {
+          "name": "Claude 5",
+          "slug": "claude-5",
+          "company": "Anthropic",
+          "input_token_cost": 6.20,
+          "output_token_cost": 27.50
+        }
+      ]
+    },
+    {
+      "name": "Kimi Moonshot",
+      "website": "https://platform.moonshot.cn",
+      "models": [
+        {
+          "name": "Kimi k2.6",
+          "slug": "kimi-k2.6",
+          "company": "Kimi",
+          "input_token_cost": 1.60,
+          "output_token_cost": 4.40
+        }
+      ]
+    },
+    {
+      "name": "DeepSeek",
+      "website": "https://platform.deepseek.com",
+      "models": [
+        {
+          "name": "DeepSeek V4 Flash",
+          "slug": "deepseek-v4-flash",
+          "company": "DeepSeek",
+          "input_token_cost": 1.14,
+          "output_token_cost": 2.28
+        }
+      ]
+    }
+  ]
+}

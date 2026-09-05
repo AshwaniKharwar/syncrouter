@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, UniqueConstraint, text
+from sqlalchemy import DateTime, ForeignKey, Integer, Numeric, String, UniqueConstraint, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -31,8 +31,12 @@ class ModelProviderMapping(Base):
         index=True,
         nullable=False,
     )
-    input_token_cost: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    output_token_cost: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    input_token_cost: Mapped[float] = mapped_column(
+        Numeric(12, 6, asdecimal=False), nullable=False, default=0.0
+    )
+    output_token_cost: Mapped[float] = mapped_column(
+        Numeric(12, 6, asdecimal=False), nullable=False, default=0.0
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
