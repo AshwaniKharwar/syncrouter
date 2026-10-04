@@ -120,36 +120,6 @@ export default function Header() {
           })}
         </nav>
       </div>
-
-      {/* Right Utility Status */}
-      <div className="flex items-center gap-3">
-        <div className="hidden items-center gap-2 rounded-full border border-border/80 bg-surface/80 px-2.5 py-1 text-[11px] font-medium text-text-muted sm:flex">
-          <span className="relative flex h-2 w-2">
-            {apiStatus === "online" ? (
-              <>
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
-              </>
-            ) : (
-              <span
-                className={cn(
-                  "relative inline-flex h-2 w-2 rounded-full",
-                  apiStatus === "checking"
-                    ? "bg-text-muted"
-                    : "bg-danger"
-                )}
-              />
-            )}
-          </span>
-          <span className="text-text-secondary">
-            {apiStatus === "online"
-              ? "API operational"
-              : apiStatus === "checking"
-              ? "Checking API…"
-              : "API unreachable"}
-          </span>
-        </div>
-      </div>
     </header>
   );
 }
