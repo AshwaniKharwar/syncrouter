@@ -64,7 +64,7 @@ async def deduct_user_credits(
         return None
 
     credit.credits = max(0, credit.credits - credits_to_deduct)
-    credit.updated_at = datetime.utcnow()
+    credit.updated_at = datetime.now(timezone.utc)
     await db.commit()
     await db.refresh(credit)
     return credit.credits
