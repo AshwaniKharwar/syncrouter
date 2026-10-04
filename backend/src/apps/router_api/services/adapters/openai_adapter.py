@@ -1,5 +1,3 @@
-from collections.abc import AsyncGenerator
-import json
 import logging
 from typing import Any
 
@@ -8,7 +6,6 @@ import httpx
 
 from src.apps.router_api.schemas.completion import ChatCompletionRequest
 from src.apps.router_api.services.adapters.base import (
-    AdapterChunk,
     AdapterResult,
     BaseProviderAdapter,
 )
@@ -132,49 +129,5 @@ class OpenAICompatibleAdapter(BaseProviderAdapter):
         self,
         request: ChatCompletionRequest,
         model_slug: str,
-    ) -> AsyncGenerator[AdapterChunk, None]:
-        self._ensure_configured()
-        url = f"{self.base_url}/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
-        payload = self._build_payload(request, model_slug, stream=True)
-
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
-            async with client.stream("POST", url, json=payload, headers=headers) as response:
-                if response.is_error:
-                    await response.aread()
-                    raise HTTPException(
-                        status_code=status.HTTP_502_BAD_GATEWAY,
-                        detail={
-                            "error": {
-                                "message": f"Upstream provider '{self.provider_name}' streaming error: {response.text}",
-                                "type": "upstream_error",
-                                "code": "upstream_streaming_error",
-                            }
-                        },
-                    )
-
-                async for line in response.aiter_lines():
-                    clean_line = line.strip()
-                    if not clean_line or not clean_line.startswith("data: "):
-                        continue
-                    data_str = clean_line.removeprefix("data: ").strip()
-                    if data_str == "[DONE]":
-                        break
-                    try:
-                        chunk_json = json.loads(data_str)
-                        choices = chunk_json.get("choices", [])
-                        if choices:
-                            delta = choices[0].get("delta", {})
-                            content = delta.get("content")
-                            role = delta.get("role")
-                            finish_reason = choices[0].get("finish_reason")
-                            yield AdapterChunk(
-                                content=content,
-                                role=role,
-                                finish_reason=finish_reason,
-                            )
-                    except json.JSONDecodeError:
-                        continue
+    ):
+        raise NotImplementedError("Streaming is not yet implemented.")

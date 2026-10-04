@@ -1,6 +1,5 @@
 from src.apps.router_api.services.adapters.anthropic_adapter import AnthropicAdapter
 from src.apps.router_api.services.adapters.base import (
-    AdapterChunk,
     AdapterResult,
     BaseProviderAdapter,
 )
@@ -11,7 +10,6 @@ from src.apps.router_api.services.adapters.openai_adapter import OpenAICompatibl
 __all__ = [
     "BaseProviderAdapter",
     "AdapterResult",
-    "AdapterChunk",
     "OpenAICompatibleAdapter",
     "AnthropicAdapter",
     "GeminiAdapter",

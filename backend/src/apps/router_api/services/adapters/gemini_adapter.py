@@ -1,5 +1,3 @@
-from collections.abc import AsyncGenerator
-import json
 import logging
 from typing import Any
 
@@ -8,7 +6,6 @@ import httpx
 
 from src.apps.router_api.schemas.completion import ChatCompletionRequest
 from src.apps.router_api.services.adapters.base import (
-    AdapterChunk,
     AdapterResult,
     BaseProviderAdapter,
 )
@@ -140,52 +137,5 @@ class GeminiAdapter(BaseProviderAdapter):
         self,
         request: ChatCompletionRequest,
         model_slug: str,
-    ) -> AsyncGenerator[AdapterChunk, None]:
-        self._ensure_configured()
-        url = f"{self.base_url}/models/{model_slug}:streamGenerateContent?key={self.api_key}&alt=sse"
-
-        system_instruction, contents = self._build_contents(request)
-        payload: dict[str, Any] = {"contents": contents}
-        if system_instruction:
-            payload["systemInstruction"] = system_instruction
-
-        generation_config: dict[str, Any] = {}
-        if request.temperature is not None:
-            generation_config["temperature"] = request.temperature
-        if request.top_p is not None:
-            generation_config["topP"] = request.top_p
-        if request.max_tokens is not None:
-            generation_config["maxOutputTokens"] = request.max_tokens
-        if generation_config:
-            payload["generationConfig"] = generation_config
-
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
-            async with client.stream("POST", url, json=payload) as response:
-                if response.is_error:
-                    await response.aread()
-                    raise HTTPException(
-                        status_code=status.HTTP_502_BAD_GATEWAY,
-                        detail={
-                            "error": {
-                                "message": f"Gemini streaming error: {response.text}",
-                                "type": "upstream_error",
-                                "code": "upstream_streaming_error",
-                            }
-                        },
-                    )
-
-                async for line in response.aiter_lines():
-                    clean_line = line.strip()
-                    if not clean_line or not clean_line.startswith("data: "):
-                        continue
-                    data_str = clean_line.removeprefix("data: ").strip()
-                    try:
-                        event_data = json.loads(data_str)
-                        candidates = event_data.get("candidates", [])
-                        if candidates:
-                            parts = candidates[0].get("content", {}).get("parts", [])
-                            text = "".join(p.get("text", "") for p in parts if "text" in p)
-                            if text:
-                                yield AdapterChunk(content=text)
-                    except json.JSONDecodeError:
-                        continue
+    ):
+        raise NotImplementedError("Streaming is not yet implemented.")

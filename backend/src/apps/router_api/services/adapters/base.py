@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from typing import Any
 
@@ -17,13 +16,6 @@ class AdapterResult:
     raw_response: dict[str, Any] | None = None
 
 
-@dataclass
-class AdapterChunk:
-    content: str | None
-    role: str | None = None
-    finish_reason: str | None = None
-
-
 class BaseProviderAdapter(ABC):
     """Abstract base class for upstream provider adapters."""
 
@@ -39,11 +31,3 @@ class BaseProviderAdapter(ABC):
         """Execute a non-streaming chat completion request."""
         pass
 
-    @abstractmethod
-    async def complete_stream(
-        self,
-        request: ChatCompletionRequest,
-        model_slug: str,
-    ) -> AsyncGenerator[AdapterChunk, None]:
-        """Execute a streaming chat completion request yielding chunk deltas."""
-        pass

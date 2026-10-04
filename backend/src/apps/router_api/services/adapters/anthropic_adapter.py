@@ -1,5 +1,3 @@
-from collections.abc import AsyncGenerator
-import json
 import logging
 from typing import Any
 
@@ -8,7 +6,6 @@ import httpx
 
 from src.apps.router_api.schemas.completion import ChatCompletionRequest
 from src.apps.router_api.services.adapters.base import (
-    AdapterChunk,
     AdapterResult,
     BaseProviderAdapter,
 )
@@ -139,55 +136,5 @@ class AnthropicAdapter(BaseProviderAdapter):
         self,
         request: ChatCompletionRequest,
         model_slug: str,
-    ) -> AsyncGenerator[AdapterChunk, None]:
-        self._ensure_configured()
-        url = f"{self.base_url}/v1/messages"
-        headers = {
-            "x-api-key": self.api_key or "",
-            "anthropic-version": "2023-06-01",
-            "Content-Type": "application/json",
-        }
-
-        system_prompt, messages = self._convert_messages(request)
-        max_tokens = request.max_tokens or 2048
-
-        payload: dict[str, Any] = {
-            "model": model_slug,
-            "messages": messages,
-            "max_tokens": max_tokens,
-            "stream": True,
-        }
-        if system_prompt:
-            payload["system"] = system_prompt
-
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
-            async with client.stream("POST", url, json=payload, headers=headers) as response:
-                if response.is_error:
-                    await response.aread()
-                    raise HTTPException(
-                        status_code=status.HTTP_502_BAD_GATEWAY,
-                        detail={
-                            "error": {
-                                "message": f"Anthropic streaming error: {response.text}",
-                                "type": "upstream_error",
-                                "code": "upstream_streaming_error",
-                            }
-                        },
-                    )
-
-                async for line in response.aiter_lines():
-                    clean_line = line.strip()
-                    if not clean_line or not clean_line.startswith("data: "):
-                        continue
-                    data_str = clean_line.removeprefix("data: ").strip()
-                    try:
-                        event_data = json.loads(data_str)
-                        event_type = event_data.get("type")
-                        if event_type == "content_block_delta":
-                            delta = event_data.get("delta", {})
-                            if delta.get("type") == "text_delta":
-                                yield AdapterChunk(content=delta.get("text", ""))
-                        elif event_type == "message_stop":
-                            yield AdapterChunk(content=None, finish_reason="stop")
-                    except json.JSONDecodeError:
-                        continue
+    ):
+        raise NotImplementedError("Streaming is not yet implemented.")

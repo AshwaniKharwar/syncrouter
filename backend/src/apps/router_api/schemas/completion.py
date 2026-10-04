@@ -22,7 +22,6 @@ class ChatCompletionRequest(BaseModel):
     temperature: float | None = Field(default=1.0, ge=0.0, le=2.0)
     top_p: float | None = Field(default=1.0, ge=0.0, le=1.0)
     n: int | None = Field(default=1, ge=1)
-    stream: bool = Field(default=False, description="If set, partial message deltas will be sent as SSE data-only events.")
     stop: str | list[str] | None = None
     max_tokens: int | None = Field(default=None, ge=1)
     max_completion_tokens: int | None = Field(default=None, ge=1)
@@ -72,22 +71,3 @@ class ChatCompletionResponse(BaseModel):
     choices: list[ChatCompletionChoice]
     usage: ChatCompletionUsage
     system_fingerprint: str | None = None
-
-
-class ChatCompletionChunkDelta(BaseModel):
-    role: str | None = None
-    content: str | None = None
-
-
-class ChatCompletionChunkChoice(BaseModel):
-    index: int = 0
-    delta: ChatCompletionChunkDelta
-    finish_reason: str | None = None
-
-
-class ChatCompletionChunk(BaseModel):
-    id: str
-    object: Literal["chat.completion.chunk"] = "chat.completion.chunk"
-    created: int
-    model: str
-    choices: list[ChatCompletionChunkChoice]

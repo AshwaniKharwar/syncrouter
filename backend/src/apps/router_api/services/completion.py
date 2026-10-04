@@ -1,4 +1,3 @@
-from collections.abc import AsyncGenerator
 import logging
 import time
 import uuid
@@ -9,9 +8,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.apps.router_api.dependencies import RouterAuthContext
 from src.apps.router_api.schemas.completion import (
     ChatCompletionChoice,
-    ChatCompletionChunk,
-    ChatCompletionChunkChoice,
-    ChatCompletionChunkDelta,
     ChatCompletionRequest,
     ChatCompletionResponse,
     ChatCompletionResponseMessage,
@@ -125,61 +121,3 @@ async def create_chat_completion(
             cost_saved=resolution.cost_saved_per_1m,
         ),
     )
-
-
-async def stream_chat_completion(
-    db: AsyncSession,
-    auth: RouterAuthContext,
-    request: ChatCompletionRequest,
-) -> AsyncGenerator[str, None]:
-    """Execute streaming chat completion with dynamic routing and SSE event formatting."""
-    resolution = await resolve_route(
-        db=db,
-        model_query=request.model,
-        explicit_provider=request.provider,
-        routing_strategy=request.routing_strategy,
-    )
-
-    mapping = resolution.primary_mapping
-    adapter = get_adapter_for_provider(mapping.provider.name)
-
-    # Deduct 1 credit upfront for streaming request
-    await deduct_user_credits(db=db, credit=auth.credit, credits_to_deduct=1)
-
-    completion_id = f"chatcmpl-{uuid.uuid4().hex[:24]}"
-    created_ts = int(time.time())
-
-    # Send initial chunk with assistant role
-    initial_chunk = ChatCompletionChunk(
-        id=completion_id,
-        created=created_ts,
-        model=resolution.model.slug,
-        choices=[
-            ChatCompletionChunkChoice(
-                index=0,
-                delta=ChatCompletionChunkDelta(role="assistant", content=""),
-                finish_reason=None,
-            )
-        ],
-    )
-    yield f"data: {initial_chunk.model_dump_json()}\n\n"
-
-    # Stream deltas from provider adapter
-    async for chunk in adapter.complete_stream(request, resolution.model.slug):
-        if chunk.content or chunk.finish_reason:
-            stream_chunk = ChatCompletionChunk(
-                id=completion_id,
-                created=created_ts,
-                model=resolution.model.slug,
-                choices=[
-                    ChatCompletionChunkChoice(
-                        index=0,
-                        delta=ChatCompletionChunkDelta(content=chunk.content),
-                        finish_reason=chunk.finish_reason,
-                    )
-                ],
-            )
-            yield f"data: {stream_chunk.model_dump_json()}\n\n"
-
-    # Send final [DONE] indicator
-    yield "data: [DONE]\n\n"

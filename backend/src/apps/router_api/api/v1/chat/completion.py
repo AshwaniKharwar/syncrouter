@@ -3,7 +3,6 @@ import traceback
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
-from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.apps.router_api.dependencies import RouterAuthContext, get_api_key_auth
@@ -44,23 +43,8 @@ async def chat_completion(
     db: Annotated[AsyncSession, Depends(get_db)],
     response: Response,
 ):
-    """Execute chat completion either via buffered response or SSE stream."""
+    """Execute buffered chat completion with cost-based provider routing."""
     try:
-        if payload.stream:
-            return StreamingResponse(
-                completion_service.stream_chat_completion(
-                    db=db,
-                    auth=auth,
-                    request=payload,
-                ),
-                media_type="text/event-stream",
-                headers={
-                    "Cache-Control": "no-cache",
-                    "Connection": "keep-alive",
-                    "X-Accel-Buffering": "no",
-                },
-            )
-
         result = await completion_service.create_chat_completion(
             db=db,
             auth=auth,
@@ -91,3 +75,4 @@ async def chat_completion(
                 }
             },
         )
+
