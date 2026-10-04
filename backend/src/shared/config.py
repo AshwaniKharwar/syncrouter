@@ -23,5 +23,21 @@ class Settings(BaseSettings):
     GOOGLE_USERINFO_URL: str = "https://openidconnect.googleapis.com/v1/userinfo"
     TOKEN_COOKIE_NAME: str = "access_token"
 
+    # Upstream AI Provider API Keys & Endpoints (Optional)
+    OPENAI_API_KEY: str | None = None
+    OPENAI_BASE_URL: str = "https://api.openai.com/v1"
+
+    ANTHROPIC_API_KEY: str | None = None
+    ANTHROPIC_BASE_URL: str = "https://api.anthropic.com"
+
+    GEMINI_API_KEY: str | None = None
+    GEMINI_BASE_URL: str = "https://generativelanguage.googleapis.com/v1beta"
+
+    DEEPSEEK_API_KEY: str | None = None
+    DEEPSEEK_BASE_URL: str = "https://api.deepseek.com/v1"
+
+    MOONSHOT_API_KEY: str | None = None
+    MOONSHOT_BASE_URL: str = "https://api.moonshot.cn/v1"
+
 
 settings = Settings()
